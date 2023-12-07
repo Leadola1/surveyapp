@@ -1,0 +1,72 @@
+{
+    "farmer_registration" : [
+        {
+            "type": "text",
+            "column_name": "name",
+            "mandatory": 1,
+            "visible": 1,
+            "readonly": 0,
+            "label": "Name"
+        },
+        {
+            "type": "list",
+            "column_name": "gender",
+            "mandatory": 1,
+            "visible": 1,
+            "readonly": 0,
+            "label": "Gender"
+        },
+        {
+            "type": "radiobutton",
+            "column_name": "marital_status",
+            "mandatory": 1,
+            "visible": 1,
+            "readonly": 0,
+            "label": "Marital Status"
+        },
+        {
+            "type": "number",
+            "column_name": "family_members",
+            "mandatory": 1,
+            "visible": 1,
+            "readonly": 0,
+            "label": "Count Of family Members"
+        }
+    ],
+    "farmer_family_registration":[
+        {
+            "type": "text",
+            "column_name": "name",
+            "mandatory": 1,
+            "visible": 1,
+            "readonly": 0,
+            "label": "Name"
+        },
+        {
+            "type": "list",
+            "column_name": "gender",
+            "mandatory": 1,
+            "visible": 1,
+            "readonly": 0,
+            "label": "Gender"
+        },
+        {
+            "type": "number",
+            "column_name": "age",
+            "mandatory": 1,
+            "visible": 1,
+            "readonly": 0,
+            "label": "Age"
+        },
+        {
+            "type": "list",
+            "column_name": "relation_with_farmer",
+            "mandatory": 0,
+            "visible": 1,
+            "readonly": 0,
+            "label": "Relation with Farmer"
+        }
+    ]
+    
+    
+}
