@@ -11,9 +11,23 @@ const FormField: React.FC<FormFieldProps> = ({
   formValues,
   handleFieldChange,
 }) => {
-  switch (field.type) {
-    case 'text':
-      return (
+  const radioButtons: RadioButtonProps[] = [
+    {
+      id: 'single',
+      label: 'Single',
+      value: 'single',
+      disabled: field.readonly === 1,
+    },
+    {
+      id: 'married',
+      label: 'Married',
+      value: 'married',
+      disabled: field.readonly === 1,
+    },
+  ];
+  return (
+    <>
+      {field.type === 'text' && (
         <View key={field.column_name} style={{marginBottom: 10}}>
           <Text>{field.label}</Text>
           <TextInput
@@ -23,14 +37,13 @@ const FormField: React.FC<FormFieldProps> = ({
               handleFieldChange(field.label, text, field.readonly === 1)
             }
             editable={!field.readonly}
-            activeUnderlineColor= 'green'
-            style={{backgroundColor:'#afe1af'}}
+            activeUnderlineColor="green"
+            style={{backgroundColor: '#afe1af'}}
           />
           <Divider />
         </View>
-      );
-    case 'list':
-      return (
+      )}
+      {field.type === 'list' && (
         <View key={field.column_name} style={{marginBottom: 2}}>
           <Text>{field.label}</Text>
           <Divider />
@@ -44,41 +57,25 @@ const FormField: React.FC<FormFieldProps> = ({
             disabled={field.readonly === 1}
           />
         </View>
-      );
-    case 'radiobutton':
-      if (field.column_name === 'marital_status') {
-        const radioButtons: RadioButtonProps[] = [
-          {
-            id: 'single',
-            label: 'Single',
-            value: 'single',
-            disabled: field.readonly === 1,
-          },
-          {
-            id: 'married',
-            label: 'Married',
-            value: 'married',
-            disabled: field.readonly === 1,
-          },
-        ];
-
-        return (
-          <View key={field.column_name} style={{marginBottom: 10}}>
-            <Text>{field.label}</Text>
-            <RadioGroup
-              radioButtons={radioButtons}
-              onPress={data =>
-                handleFieldChange(field.label, data, field.readonly === 1)
-              }
-              layout="row"
-              selectedId={formValues[field.label]?.toString() || ''}
-            />
-            <Divider />
-          </View>
-        );
-      }
-    case 'number':
-      return (
+      )}
+      {field.type === 'radiobutton' &&
+        field.column_name === 'marital_status' && (
+          <>
+            <View key={field.column_name} style={{marginBottom: 10}}>
+              <Text>{field.label}</Text>
+              <RadioGroup
+                radioButtons={radioButtons}
+                onPress={data =>
+                  handleFieldChange(field.label, data, field.readonly === 1)
+                }
+                layout="row"
+                selectedId={formValues[field.label]?.toString() || ''}
+              />
+              <Divider />
+            </View>
+          </>
+        )}
+      {field.type === 'number' && (
         <View key={field.column_name} style={{marginBottom: 10}}>
           <Text>{field.label}</Text>
           <TextInput
@@ -89,15 +86,14 @@ const FormField: React.FC<FormFieldProps> = ({
               handleFieldChange(field.label, text, field.readonly === 1)
             }
             editable={!field.readonly}
-            activeUnderlineColor= 'green'
-            style={{backgroundColor:'#afe1af'}}
+            activeUnderlineColor="green"
+            style={{backgroundColor: '#afe1af'}}
           />
           <Divider />
         </View>
-      );
-    default:
-      return null;
-  }
+      )}
+    </>
+  );
 };
 
 export default FormField;

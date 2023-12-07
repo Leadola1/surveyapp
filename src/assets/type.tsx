@@ -1,5 +1,5 @@
 export interface FormFieldType {
-  type: string;
+  type: 'text' | 'list' |'radiobutton'|'number'|string;
   column_name: string;
   mandatory: number;
   visible: number;
