@@ -9,7 +9,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import {useSelector} from 'react-redux';
+import {useSelector, shallowEqual} from 'react-redux';
 import {RootState} from '../redux/store';
 import FormField from './FormField';
 import {FormValues} from '../assets/type';
@@ -19,12 +19,29 @@ import {FormFieldType} from '../assets/type';
 
 interface FormScreenProps {
   formData: FormFieldType[];
-  formType: 'family' | 'farmer';
+  formType: string;
 }
+interface DynamicFormState {
+  [key: string]: {
+    formValues: Record<string, string | boolean | number | undefined>[];
+  };
+}
+const selectFormValues = (state: RootState, formType: string) => {
+  const formDataState = (state[formType] as DynamicFormState) || {};
+  const formValues =
+    (
+      (formDataState.formValues || {}) as Record<
+        string,
+        Record<string, string | boolean | number | undefined>[]
+      >
+    )?.[formType] || [];
+  return formValues;
+};
 
 const FormScreen: React.FC<FormScreenProps> = ({formData, formType}) => {
-  const savedFormValues = useSelector((state: RootState) =>
-    formType === 'family' ? state.family.formValues : state.form.formValues,
+  const savedFormValues = useSelector(
+    (state: RootState) => selectFormValues(state, formType),
+    shallowEqual,
   );
   const [formValues, setFormValues] = useState<FormValues>({});
   const renderFormFields = () => {
@@ -85,7 +102,7 @@ const FormScreen: React.FC<FormScreenProps> = ({formData, formType}) => {
                     alignSelf: 'center',
                     color: 'black',
                   }}>
-                  {formType === 'family' ? 'Family Detail' : 'Farmers Detail'}
+                  {formType}
                 </Text>
                 {savedFormValues.map((values, index) => (
                   <View

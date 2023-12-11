@@ -1,7 +1,6 @@
 import { FormValues, FormFieldType } from '../assets/type';
 import { useDispatch } from 'react-redux';
-import { submitFamilyForm } from '../redux/farmerFamilySlice';
-import { submitForm } from '../redux/farmerSlice';
+import  {actions}  from '../redux/dynamicSlice';
 import { showMessage } from 'react-native-flash-message';
 import { Keyboard } from 'react-native';
 
@@ -9,7 +8,7 @@ const useFormSubmit = (
   formValues: FormValues,
   setFormValues: React.Dispatch<React.SetStateAction<FormValues>>,
   formData: FormFieldType[],
-  formType: 'farmer' | 'family',
+  formType: string,
 ) => {
   const dispatch = useDispatch();
 
@@ -23,13 +22,14 @@ const useFormSubmit = (
     );
     if (valuesProvided) {
       const nonMandatoryFields = formData.filter(
-        (field) => field.mandatory === 0 && field.visible === 1
-      );
-      nonMandatoryFields.forEach((field) => {
-        if (!formValues.hasOwnProperty(field.label)) {
-          formValues[field.label] = '-';
-        }
-      });
+  (field) => field.mandatory === 0 && field.visible === 1
+);
+
+nonMandatoryFields.forEach((field) => {
+  if (formValues[field.label] === undefined || formValues[field.label] === null) {
+    formValues[field.label] = '-';
+  }
+});
 
       const orderedKeys = [
         'Name',
@@ -37,17 +37,12 @@ const useFormSubmit = (
           .sort()
           .filter((key) => key !== 'Name'),
       ];
-
+      
       const rearrangedObject: FormValues = {};
       orderedKeys.forEach((key) => {
         rearrangedObject[key] = formValues[key];
       });
-
-      if (formType === 'family') {
-        dispatch(submitFamilyForm(rearrangedObject));
-      } else if (formType === 'farmer') {
-        dispatch(submitForm(rearrangedObject));
-      }
+      dispatch(actions.submitForm({ formType, data: rearrangedObject }));
 
       setFormValues({});
       Keyboard.dismiss();

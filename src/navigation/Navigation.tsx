@@ -1,26 +1,37 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import Family from '../screens/Family';
-import Farmer from '../screens/Farmer';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-
-type screenType = {
-  Farmer: undefined;
-  Family: undefined;
+import DynamicFormPage from '../screens/DynamicFormPage';
+import formData from '../assets/data.json';
+import { FormFieldType } from '../assets/type';
+type TabParamList = {
+  [key: string]: undefined;
 };
-const Tab = createBottomTabNavigator<screenType>();
+
+const Tab = createBottomTabNavigator<TabParamList>();
+
+const generatePages = () => {
+  return Object.entries(formData).map(([key, value]) => (
+    <Tab.Screen key={key} name={key}>
+      {() => <DynamicFormPage formData={value as FormFieldType[]} formType={key as string} />}
+    </Tab.Screen>
+  ));
+};
+
 export default function Navigation() {
+  const pages = generatePages();
+
   return (
     <NavigationContainer>
       <Tab.Navigator
-        screenOptions={({route}) => ({
-          tabBarIcon: ({focused, color, size}) => {
+        screenOptions={({ route }) => ({
+          tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === 'Farmer') {
+            if (route.name === 'farmer_registration') {
               iconName = focused ? 'person' : 'person';
-            } else if (route.name === 'Family') {
+            } else {
               iconName = focused ? 'groups' : 'groups';
               size = 35;
             }
@@ -33,12 +44,11 @@ export default function Navigation() {
           headerStyle: {
             backgroundColor: '#007155',
           },
-
           headerTitleAlign: 'center',
           headerTintColor: 'white',
-        })}>
-        <Tab.Screen name="Farmer" component={Farmer} />
-        <Tab.Screen name="Family" component={Family} />
+        })}
+      >
+        {pages}
       </Tab.Navigator>
     </NavigationContainer>
   );

@@ -1,10 +1,17 @@
 import { combineReducers } from 'redux';
-import {farmerReducer} from './farmerSlice'
-import { familyReducer } from './farmerFamilySlice';
+import formData from '../assets/data.json';
+import { createDynamicSlice } from './dynamicSlice';
 
-const rootReducer = combineReducers({
-  form: farmerReducer,
-  family: familyReducer
+const formTypes = Object.keys(formData);
+
+const reducers: Record<string, any> = {};
+formTypes.forEach((formType) => {
+  const { reducer } = createDynamicSlice(formType);
+  reducers[formType] = reducer;
 });
 
+const rootReducer = combineReducers(reducers);
+
 export default rootReducer;
+
+
